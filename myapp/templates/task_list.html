@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block body %}
+
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-{{message.tags}} alert-primary alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+
+{% endfor %}
+{% endif %}
+    
+<h1 class="task text-danger">Task List</h1>
+
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col"><strong>Title:</strong></th>
+            <th scope="col"><strong>Description:</strong></th>
+            <th scope="col"><strong>Created At:</strong></th>
+            <th scope="col"><strong>Due Date:</strong></th>
+            <th scope="col"><strong>Completed:</strong></th>
+            <th scope="col"><strong>Action:</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for a in tasks %}
+          <tr>
+            <th scope="row">1</th>
+            <td>{{ a.title }}</td>
+            <td>{{ a.description }}</td>
+            <td>{{ a.created_at }}</td>
+            <td>{{ a.due_date|date:"Y-m-d H:i:s" }}</td>
+            <td> {{ task.is_completed|yesno:"Yes,No" }}</td>
+            <td><button type="button" class="btn btn-secondary"><i class="bi bi-ticket-detailed"></i></button><button type="button" class="btn btn-success"><i class="bi bi-android2"></i></button>
+            <!--delete form-->
+            <form action="{% url 'delete_task' a.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?');"><i class="bi bi-trash"></i>
+            </button>
+            </form>
+            
+            </td>
+          </tr>
+         
+        {% empty %}
+        <li>No tasks available.</li>
+        {% endfor %}
+        </tbody>
+      </table>
+
+
+
+{% endblock %}
