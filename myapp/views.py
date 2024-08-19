@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404,loader,HttpResponse
 from .models import Task
 from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
@@ -31,7 +31,12 @@ def logout_views(request):
 
 def task_list(request):
     tasks = Task.objects.all().order_by('-id')
-    return render(request, 'task_list.html', {'tasks': tasks})
+    template = loader.get_template('task_list.html')
+    context = {
+        'tasks': tasks,
+    }
+
+    return HttpResponse(template.render(context,request))
 @login_required(login_url='login')
 
 def task_create(request):
